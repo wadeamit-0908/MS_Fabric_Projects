@@ -54,7 +54,7 @@ run_start_time = datetime.now()
 
 # CELL ********************
 
-yaml_path = "/lakehouse/default/Files/config/yaml/bronze/"
+# yaml_path = "/lakehouse/default/Files/config/yaml/bronze/"
 final_unzip_path = unzip_folder.replace("/lakehouse/default/", "")
 file_name_prefix = "summary"
 summary_file_name, summary_file_path = read_recursive_file_data(final_unzip_path)
@@ -160,10 +160,10 @@ summary_file_name, summary_file_path = read_recursive_file_data(final_unzip_path
 
 #AW
 # Calling unzip function with email notification
-all_files = mssparkutils.fs.ls("Files/config/yaml/bronze/")
+all_files = mssparkutils.fs.ls(bronze_all_files)
 for actual_file_path in all_files:
     run_id = mssparkutils.env.getJobId() + f"_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-    absolute_path = yaml_path + actual_file_path.name
+    absolute_path = bronze_yaml_path + actual_file_path.name
     table_name = actual_file_path.name.split(".")[0]
     try:
         # Read YAML configuration
