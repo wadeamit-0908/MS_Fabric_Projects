@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "KQLDatabase",
+    "displayName": "Event_Stream"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "fe62140f-b873-b7ca-4386-b112551dc4bf"
+  }
+}

@@ -1,0 +1,202 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "GetMetadata",
+        "typeProperties": {
+          "datasetSettings": {
+            "type": "Binary",
+            "typeProperties": {
+              "location": {
+                "type": "LakehouseLocation",
+                "folderPath": "inbound/customer_billing"
+              }
+            },
+            "linkedService": {
+              "name": "lk_customer_billing",
+              "properties": {
+                "type": "Lakehouse",
+                "typeProperties": {
+                  "artifactId": "8a6aaac3-9bfa-a80c-48b7-bf19de0f46b7",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000",
+                  "rootFolder": "Files"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "fieldList": [
+            "childItems"
+          ],
+          "storeSettings": {
+            "type": "AzureBlobStorageReadSettings",
+            "recursive": true,
+            "enablePartitionDiscovery": false
+          },
+          "formatSettings": {
+            "type": "BinaryReadSettings"
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Get Metadata to folder 1",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@activity('Get Metadata to folder 1').output.childItems",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "41a93c93-bcc8-bef8-4d5f-d8a195479ca9",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "file_name": {
+                    "value": {
+                      "value": "@item().name",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "pipeline_name": {
+                    "value": {
+                      "value": "@pipeline().PipelineName",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "task_name": {
+                    "value": "nb_stage1_unzipfiles",
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_stage1_unzipfiles",
+              "dependsOn": []
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "9530627e-df5a-b067-4cfd-f4b16eb9b5c8",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "pipeline_name": {
+                    "value": {
+                      "value": "@pipeline().PipelineName",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "task_name": {
+                    "value": "nb_stage2_bronze_layer",
+                    "type": "string"
+                  },
+                  "yaml_path_bronze": {
+                    "value": {
+                      "value": "@pipeline().parameters.yaml_path_bronze",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_stage2_bronze_layer",
+              "dependsOn": [
+                {
+                  "activity": "nb_stage1_unzipfiles",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "614537fe-1d00-83fd-420c-176772be4bea",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "file_name": {
+                    "value": {
+                      "value": "@item().name",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "pipeline_name": {
+                    "value": {
+                      "value": "@pipeline().PipelineName",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "task_name": {
+                    "value": "nb_stage3_archive_zip",
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_stage3_archive_zip",
+              "dependsOn": [
+                {
+                  "activity": "nb_stage2_bronze_layer",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": "ForEachzipfile",
+        "dependsOn": [
+          {
+            "activity": "Get Metadata to folder 1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "yaml_path_bronze": {
+        "type": "string",
+        "defaultValue": "/lakehouse/default/Files/config/yaml/bronze/"
+      }
+    }
+  }
+}

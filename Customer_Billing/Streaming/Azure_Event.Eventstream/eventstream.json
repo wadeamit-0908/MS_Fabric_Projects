@@ -1,0 +1,121 @@
+{
+  "sources": [
+    {
+      "id": "e1b641af-1d82-4208-9341-a0cfbf064a2d",
+      "name": "azure-event-hub",
+      "type": "AzureEventHub",
+      "properties": {
+        "dataConnectionId": "f33f67db-6b55-4995-b639-ec0c7bbb8518",
+        "consumerGroupName": "$Default",
+        "inputSerialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8"
+          }
+        }
+      }
+    }
+  ],
+  "destinations": [
+    {
+      "id": "55d00abd-72d4-4908-a7db-20b40223f1a1",
+      "name": "Lakehouse",
+      "type": "Lakehouse",
+      "properties": {
+        "workspaceId": "00000000-0000-0000-0000-000000000000",
+        "itemId": "7a2930f4-0831-bc88-476e-a4d3d74aa5e6",
+        "schema": "dbo",
+        "deltaTable": "streaming_data",
+        "inputSerialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8"
+          }
+        }
+      },
+      "inputNodes": [
+        {
+          "name": "Azure_Event-stream"
+        }
+      ],
+      "inputSchemas": [
+        {
+          "name": "Azure_Event-stream",
+          "schema": {
+            "columns": [
+              {
+                "name": "StoreCode",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "Date",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "Duration",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "Operator",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "SelfCheckout",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "CashOnHand",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventProcessedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "PartitionId",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventEnqueuedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "streams": [
+    {
+      "id": "81850c87-ab33-48b1-b12c-ac4fb5155a31",
+      "name": "Azure_Event-stream",
+      "type": "DefaultStream",
+      "properties": {},
+      "inputNodes": [
+        {
+          "name": "azure-event-hub"
+        }
+      ]
+    }
+  ],
+  "operators": [],
+  "compatibilityLevel": "1.1"
+}
