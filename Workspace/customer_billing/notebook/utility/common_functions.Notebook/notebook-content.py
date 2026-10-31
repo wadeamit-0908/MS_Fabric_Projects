@@ -61,6 +61,19 @@ from functools import reduce
 
 # CELL ********************
 
+#UserName who run the pipeline
+run_by_user = mssparkutils.env.getUserName()
+print(run_by_user)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
 #define functions - unzip_files
 def unzip_files(zip_path, unzip_path):
     #validation 1: file exists

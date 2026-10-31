@@ -34,8 +34,8 @@
 # CELL ********************
 
 run_start_time = datetime.now()
-yaml_path = "/lakehouse/default/Files/config/yaml/silver/"
-dummy_date = "9999-01-01 00:00:00"
+# silver_yaml_path = "/lakehouse/default/Files/config/yaml/silver/"
+# dummy_date = "9999-01-01 00:00:00"
 
 # METADATA ********************
 
@@ -47,9 +47,9 @@ dummy_date = "9999-01-01 00:00:00"
 # CELL ********************
 
 # Read all Silver YAML files
-all_files = mssparkutils.fs.ls("Files/config/yaml/silver/")
+all_files = mssparkutils.fs.ls(silver_all_files)
 if not all_files:
-    raise FileNotFoundError(f"No YAML files found in {yaml_path}")
+    raise FileNotFoundError(f"No YAML files found in {silver_yaml_path}")
 
 for yaml_file in all_files:
     inserted_count = 0
@@ -58,7 +58,7 @@ for yaml_file in all_files:
 
     try:
         run_id = mssparkutils.env.getJobId() + "_" + datetime.now().strftime("%Y%m%d_%H%M%S")
-        config = open_file_read_data(yaml_path + yaml_file.name)["table"]
+        config = open_file_read_data(silver_yaml_path + yaml_file.name)["table"]
 
         table_name = config["name"]
         source_table = f'{config["source_schema_name"]}.{config.get("source_table_name", table_name)}'
@@ -68,10 +68,13 @@ for yaml_file in all_files:
         column_names = [c["name"] for c in columns]
         column_types = {c["name"]: c["data_type"].upper() for c in columns}
 
+        created_by_col = "created_by"
+        updated_by_col = "updated_by"
+
         business_keys = config["business_key"]
         hash_config = config["hash_key"]
         hash_name = hash_config.get("name", "hash_key")
-        hash_columns = hash_config["columns"]
+        excluded_columns = config["excluded_columns"]
 
         scd = config["scd"]
         inserted_col = scd["inserted_date_column"]
@@ -80,14 +83,14 @@ for yaml_file in all_files:
         latest_value = scd.get("latest_flag_value", 1)
 
         process_log("Start", table_name=table_name, layer="silver")
-        #Create Silver schema and table if needed
-        spark.sql(f'CREATE SCHEMA IF NOT EXISTS `{config["schema_name"]}`')
-        ddl_columns = ", ".join([f'`{c["name"]}` {c["data_type"]}' for c in columns])
-        spark.sql(f"""CREATE TABLE IF NOT EXISTS {target_table} ({ddl_columns}) USING DELTA""")
-
         #Metadata columns are generated in Silver, not read from Bronze
-        metadata_columns = [hash_name, inserted_col, updated_col, latest_col]
+        metadata_columns = [hash_name, inserted_col, updated_col, latest_col, created_by_col, updated_by_col]
         data_columns = [c for c in column_names if c not in metadata_columns]
+        hash_columns = [c for c in column_names if c not in excluded_columns]
+        # data_columns = [c for c in column_names if c not in excluded_columns]
+        # print("data_columns_old => ", data_columns_old)
+        # print("excluded_columns => ", excluded_columns)
+        # print("data_columns => ", data_columns)
 
         #Read Bronze data and cast columns using YAML data types
         bronze = spark.table(source_table).select(*data_columns)
@@ -148,6 +151,8 @@ for yaml_file in all_files:
                         .withColumn(inserted_col, F.current_timestamp())
                         .withColumn(updated_col, F.lit(dummy_date).cast("timestamp"))
                         .withColumn(latest_col, F.lit(latest_value).cast("int"))
+                        .withColumn(created_by_col, F.lit(run_by_user))
+                        .withColumn(updated_by_col, F.lit(run_by_user))
                         .select(*column_names))
 
         #Prepare rows that expire old current versions
@@ -170,7 +175,7 @@ for yaml_file in all_files:
             (delta_table.alias("t")
              .merge(merge_source.alias("s"), merge_condition)
              .whenMatchedUpdate(
-                 set={latest_col: "0", updated_col: "current_timestamp()"}
+                 set={latest_col: "0", updated_col: "current_timestamp()", updated_by_col: F.lit(run_by_user)}
              )
              .whenNotMatchedInsert(
                  condition="s.`_scd_action` = 'INSERT'",
