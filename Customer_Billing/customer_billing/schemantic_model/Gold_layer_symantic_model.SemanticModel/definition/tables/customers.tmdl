@@ -1,0 +1,103 @@
+table customers
+	lineageTag: f225de6d-0979-44d7-9fa1-cb944556e4a6
+	sourceLineageTag: [gold].[customers]
+
+	column customer_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: d2251ae0-268f-4544-8f44-fc14eb9813ec
+		sourceLineageTag: customer_id
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_name
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 83cd1261-dd94-4850-b025-d3499d217d11
+		sourceLineageTag: customer_name
+		summarizeBy: none
+		sourceColumn: customer_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 32f377ba-e3c7-4207-9a4d-bfa7bae5d66b
+		sourceLineageTag: city
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 1c4860e2-d0fd-4a1a-8c24-16d724b63065
+		sourceLineageTag: state
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_segment
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 315b865c-c7d8-4676-8caf-bca0d31708e8
+		sourceLineageTag: customer_segment
+		summarizeBy: none
+		sourceColumn: customer_segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column updated_at
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 77316b55-3a13-48fd-8b5d-208d058b1d7e
+		sourceLineageTag: updated_at
+		summarizeBy: none
+		sourceColumn: updated_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column hash_key
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 93b1334c-283f-471c-bcc2-5b5836b48e5d
+		sourceLineageTag: hash_key
+		summarizeBy: none
+		sourceColumn: hash_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column inserted_date
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 3f731304-95a2-4ea3-bc5e-49a623dd915d
+		sourceLineageTag: inserted_date
+		summarizeBy: none
+		sourceColumn: inserted_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column updated_date
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 8b2b08a2-9ead-40ea-a2cd-b1a04eaa7d25
+		sourceLineageTag: updated_date
+		summarizeBy: none
+		sourceColumn: updated_date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition customers = entity
+		mode: directLake
+		source
+			entityName: customers
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

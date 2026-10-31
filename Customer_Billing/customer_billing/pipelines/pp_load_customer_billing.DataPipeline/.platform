@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "pp_load_customer_billing"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a485739a-a792-acdc-4fac-bdd257c13b0c"
+  }
+}

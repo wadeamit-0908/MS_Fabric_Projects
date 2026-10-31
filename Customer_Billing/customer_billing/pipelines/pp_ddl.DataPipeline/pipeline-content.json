@@ -1,0 +1,115 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "GetMetadata",
+        "typeProperties": {
+          "datasetSettings": {
+            "type": "Json",
+            "typeProperties": {
+              "location": {
+                "type": "LakehouseLocation",
+                "folderPath": {
+                  "value": "@pipeline().parameters.yaml_path",
+                  "type": "Expression"
+                }
+              }
+            },
+            "schema": {},
+            "linkedService": {
+              "name": "lk_customer_billing",
+              "properties": {
+                "type": "Lakehouse",
+                "typeProperties": {
+                  "artifactId": "8a6aaac3-9bfa-a80c-48b7-bf19de0f46b7",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000",
+                  "rootFolder": "Files"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "fieldList": [
+            "childItems"
+          ],
+          "storeSettings": {
+            "type": "AzureBlobStorageReadSettings",
+            "enablePartitionDiscovery": false
+          },
+          "formatSettings": {
+            "type": "JsonReadSettings"
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Get Metadata For Yaml Folder",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@activity('Get Metadata For Yaml Folder').output.childItems",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "97c1cfee-7ff8-abb8-4e8f-5d063612556a",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "yaml_base_path": {
+                    "value": {
+                      "value": "@concat('/lakehouse/default/Files/',pipeline().parameters.yaml_path)",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "yaml_file_name": {
+                    "value": {
+                      "value": "@item().name",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "ddl script for table",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "ForEach For Table Creation",
+        "dependsOn": [
+          {
+            "activity": "Get Metadata For Yaml Folder",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "yaml_path": {
+        "type": "string",
+        "defaultValue": "/lakehouse/default/Files/config/yaml/control"
+      }
+    }
+  }
+}

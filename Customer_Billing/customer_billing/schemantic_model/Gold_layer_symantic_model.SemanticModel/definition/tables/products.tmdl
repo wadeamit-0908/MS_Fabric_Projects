@@ -1,0 +1,93 @@
+table products
+	lineageTag: 0ae96b41-c462-4b8c-be40-0d4052ac2768
+	sourceLineageTag: [gold].[products]
+
+	column product_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 1bc6f149-ba83-4e04-9e15-c2ebde8abce1
+		sourceLineageTag: product_id
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_name
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: f4d82a07-cf00-4f9b-9119-cf5ef103f4f9
+		sourceLineageTag: product_name
+		summarizeBy: none
+		sourceColumn: product_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: c2b76f2b-f8af-4d3c-97bd-4b43782c8e5e
+		sourceLineageTag: category
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_price
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: aa33ce5a-4eb1-46c8-b04a-344564290994
+		sourceLineageTag: unit_price
+		summarizeBy: none
+		sourceColumn: unit_price
+
+		annotation SummarizationSetBy = Automatic
+
+	column updated_at
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: d0021c4d-2bf6-4fbb-9035-7ed025827fbf
+		sourceLineageTag: updated_at
+		summarizeBy: none
+		sourceColumn: updated_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column hash_key
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 81861fe0-01d0-4f02-83d2-c1673f3c4666
+		sourceLineageTag: hash_key
+		summarizeBy: none
+		sourceColumn: hash_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column inserted_date
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: cf1a80d4-8fca-41ed-958d-cb92d4d4d4a8
+		sourceLineageTag: inserted_date
+		summarizeBy: none
+		sourceColumn: inserted_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column updated_date
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: a654f5c0-7c26-4411-a240-6ed2fde2f022
+		sourceLineageTag: updated_date
+		summarizeBy: none
+		sourceColumn: updated_date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition products = entity
+		mode: directLake
+		source
+			entityName: products
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,173 @@
+table sales_transactions
+	lineageTag: bcb8eaae-4c95-45af-8ebd-3b277a863368
+	sourceLineageTag: [gold].[sales_transactions]
+
+	column transaction_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 5e94dcc7-54b8-479e-9e91-5af081e532d6
+		sourceLineageTag: transaction_id
+		summarizeBy: none
+		sourceColumn: transaction_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column transaction_date
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: ed376f96-f903-40ed-8dab-323250ecad87
+		sourceLineageTag: transaction_date
+		summarizeBy: none
+		sourceColumn: transaction_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: d11a561a-4c90-4b7b-81d9-909f997d3a2b
+		sourceLineageTag: channel
+		summarizeBy: none
+		sourceColumn: channel
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 50dbe7d0-d46f-4b1f-a2b8-ad0ea25b0ac2
+		sourceLineageTag: customer_id
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 07a7b348-a515-4272-aab6-05092d003823
+		sourceLineageTag: product_id
+		summarizeBy: none
+		sourceColumn: product_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: e71bb84a-e50c-4511-9fd8-e0ee8a7357b4
+		sourceLineageTag: store_id
+		summarizeBy: none
+		sourceColumn: store_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: cbe5e9a9-4d77-4295-82f3-ad361bfb9db5
+		sourceLineageTag: quantity
+		summarizeBy: none
+		sourceColumn: quantity
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_price
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 3a87dfe6-693b-447d-b53d-744162b6a8ed
+		sourceLineageTag: unit_price
+		summarizeBy: none
+		sourceColumn: unit_price
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column discount_amount
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: c1a67cb6-8b71-4417-b753-0c9cb436ad4c
+		sourceLineageTag: discount_amount
+		summarizeBy: none
+		sourceColumn: discount_amount
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column updated_at
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 2b93d70c-b126-46b9-9394-28d290e75a6e
+		sourceLineageTag: updated_at
+		summarizeBy: none
+		sourceColumn: updated_at
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column hash_key
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 1d67ced3-a5b2-4769-8c3b-2f6bfdd3d248
+		sourceLineageTag: hash_key
+		summarizeBy: none
+		sourceColumn: hash_key
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column inserted_date
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: d60001f9-01ef-46ac-94ab-9adaf98544a2
+		sourceLineageTag: inserted_date
+		summarizeBy: none
+		sourceColumn: inserted_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column updated_date
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: ee524720-31d4-4ce4-8eed-47a414c40fb5
+		sourceLineageTag: updated_date
+		summarizeBy: none
+		sourceColumn: updated_date
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition sales_transactions = entity
+		mode: directLake
+		source
+			entityName: sales_transactions
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	changedProperty = Name
+
+	changedProperty = IsHidden
+
+	annotation PBI_ResultType = Table
+

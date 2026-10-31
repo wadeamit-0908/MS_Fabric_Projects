@@ -1,0 +1,12 @@
+relationship faa79300-1415-af52-5027-0db31a54a3ef
+	fromColumn: sales_transactions.product_id
+	toColumn: products.product_id
+
+relationship eec56359-23e7-2099-d120-428f3f1749a4
+	fromColumn: sales_transactions.customer_id
+	toColumn: customers.customer_id
+
+relationship 0a385f7a-068a-cc14-a496-ab445fd437ff
+	fromColumn: sales_transactions.store_id
+	toColumn: stores.store_id
+

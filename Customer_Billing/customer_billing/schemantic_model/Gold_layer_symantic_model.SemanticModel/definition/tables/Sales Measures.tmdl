@@ -1,0 +1,67 @@
+table 'Sales Measures'
+	lineageTag: 3f249866-15ab-42c8-838c-8780b0517660
+
+	measure 'Total Units Sold' =
+			
+			SUMX(
+			    sales_transactions,
+			    IFERROR(VALUE(sales_transactions[quantity]), 0)
+			)
+		formatString: 0
+		lineageTag: 744a81ea-e873-4522-9424-633ebc1c1ca7
+
+	measure 'Total Customers' =
+			
+			DISTINCTCOUNT(customers[customer_id])
+		formatString: 0
+		lineageTag: 25274124-94f8-4d14-83fb-dccb6ea90115
+
+	measure 'Total Discounts' =
+			
+			SUMX(
+			    sales_transactions,
+			    IFERROR(
+			        VALUE(sales_transactions[discount_amount]),
+			        0
+			    )
+			)
+		formatString: 0
+		lineageTag: be9d7f8a-e7d2-400d-8f54-d81b36764dc4
+
+	measure 'Total Sales' =
+			
+			SUMX(
+			    sales_transactions,
+			    sales_transactions[quantity]
+			        * RELATED(products[unit_price])
+			)
+		lineageTag: 84b40cd5-b148-4978-b7df-1502624a17a5
+
+	measure 'Transaction Count' =
+			
+			COUNTROWS(sales_transactions)
+		formatString: 0
+		lineageTag: ce2adf7e-1be1-40b8-8167-be2299662d28
+
+	measure 'Net Sales' =
+			
+			[Total Sales] - [Total Discounts]
+		lineageTag: 1c84f36d-1a71-4dc5-bd18-bb14d4afef09
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Value
+		formatString: 0
+		lineageTag: e494adcf-628b-4341-b472-723b75eedb92
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Sales Measures' = calculated
+		mode: import
+		source = { BLANK() }
+
+	annotation PBI_Id = b879f68a901747bea1902b9f3557623f
+

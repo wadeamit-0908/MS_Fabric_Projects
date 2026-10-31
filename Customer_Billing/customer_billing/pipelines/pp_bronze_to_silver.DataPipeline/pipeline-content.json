@@ -1,0 +1,48 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "643aa115-9fac-a49c-4c19-c20e9352f5f6",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "pipeline_name": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "task_name": {
+              "value": "bronze_to_silver",
+              "type": "string"
+            },
+            "yaml_path_silver": {
+              "value": {
+                "value": "@pipeline().parameters.yaml_path_silver",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_bronze_to_silver",
+        "dependsOn": []
+      }
+    ],
+    "parameters": {
+      "yaml_path_silver": {
+        "type": "string",
+        "defaultValue": "/lakehouse/default/Files/config/yaml/silver/"
+      }
+    }
+  }
+}

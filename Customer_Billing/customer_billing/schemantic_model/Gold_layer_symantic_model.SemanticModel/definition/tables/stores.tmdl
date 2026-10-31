@@ -1,0 +1,93 @@
+table stores
+	lineageTag: 2070e629-487d-4b96-8e06-336af20e1d4f
+	sourceLineageTag: [gold].[stores]
+
+	column store_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 84b803b0-828e-48ff-aab4-ad40336cd4be
+		sourceLineageTag: store_id
+		summarizeBy: none
+		sourceColumn: store_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_name
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 88ac50d1-c0ae-415d-bed8-7197befcfa4d
+		sourceLineageTag: store_name
+		summarizeBy: none
+		sourceColumn: store_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 685cefc4-0d96-4b03-bc05-7e4850a2cb6a
+		sourceLineageTag: city
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 48d2e099-1b1a-4790-b3e8-8886a682a1c8
+		sourceLineageTag: region
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column updated_at
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 4a413fdf-1e0c-4c55-abb7-26b0f4b7e9be
+		sourceLineageTag: updated_at
+		summarizeBy: none
+		sourceColumn: updated_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column hash_key
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: d1dfdfde-7020-4acb-a6d1-73fa558bb563
+		sourceLineageTag: hash_key
+		summarizeBy: none
+		sourceColumn: hash_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column inserted_date
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 1b636b6d-01ce-4af7-a3e0-0ab0b5116776
+		sourceLineageTag: inserted_date
+		summarizeBy: none
+		sourceColumn: inserted_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column updated_date
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: f611e512-56c5-4603-8fe3-68a981bdc120
+		sourceLineageTag: updated_date
+		summarizeBy: none
+		sourceColumn: updated_date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition stores = entity
+		mode: directLake
+		source
+			entityName: stores
+			schemaName: gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+
