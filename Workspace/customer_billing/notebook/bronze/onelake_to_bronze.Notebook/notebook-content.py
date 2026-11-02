@@ -215,10 +215,10 @@ for actual_file_path in all_files:
             data_load_message = "Summary count is not matched hence process stopped"
             print("data_load_message => ", data_load_message)
             raise
-        spark.sql("""SELECT * FROM control.etl_run_log ORDER BY run_end_time DESC LIMIT 1""").show()
+        # spark.sql("""SELECT * FROM control.etl_run_log ORDER BY run_end_time DESC LIMIT 1""").show()
     except Exception as e:
         process_log("Failed", table_name=table_name, layer="bronze", error_message=str(e))
-        send_mail_fn(f"{pipeline_name}-{task_name}-{table_name}- Bronze layer is failed", str(e))
+        # send_mail_fn(f"{pipeline_name}-{task_name}-{table_name}- Bronze layer is failed", str(e))
         raise
 
 # METADATA ********************
