@@ -76,10 +76,10 @@ try:
     print(f"validation message after execution : {validation_message}")
     time.sleep(15)
     process_log("Success",file_name=file_name)
-    spark.sql("""SELECT * FROM control.etl_run_log ORDER BY run_end_time DESC LIMIT 1""").show()
+    # spark.sql("""SELECT * FROM control.etl_run_log ORDER BY run_end_time DESC LIMIT 1""").show()
 except Exception as e:
     process_log("Failed",file_name=file_name, error_message=f"{validation_message}")
-    send_mail_fn(f'{pipeline_name}-{task_name}-{file_name} is failed',f'{validation_message}')
+    # send_mail_fn(f'{pipeline_name}-{task_name}-{file_name} is failed',f'{validation_message}')
     raise
 
 # METADATA ********************

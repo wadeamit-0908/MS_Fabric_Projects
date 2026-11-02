@@ -68,9 +68,6 @@ for yaml_file in all_files:
         column_names = [c["name"] for c in columns]
         column_types = {c["name"]: c["data_type"].upper() for c in columns}
 
-        created_by_col = "created_by"
-        updated_by_col = "updated_by"
-
         business_keys = config["business_key"]
         hash_config = config["hash_key"]
         hash_name = hash_config.get("name", "hash_key")
@@ -84,7 +81,7 @@ for yaml_file in all_files:
 
         process_log("Start", table_name=table_name, layer="silver")
         #Metadata columns are generated in Silver, not read from Bronze
-        metadata_columns = [hash_name, inserted_col, updated_col, latest_col, created_by_col, updated_by_col]
+        metadata_columns = [hash_name, inserted_col, updated_col, latest_col]
         data_columns = [c for c in column_names if c not in metadata_columns]
         hash_columns = [c for c in column_names if c not in excluded_columns]
         # data_columns = [c for c in column_names if c not in excluded_columns]
@@ -151,8 +148,6 @@ for yaml_file in all_files:
                         .withColumn(inserted_col, F.current_timestamp())
                         .withColumn(updated_col, F.lit(dummy_date).cast("timestamp"))
                         .withColumn(latest_col, F.lit(latest_value).cast("int"))
-                        .withColumn(created_by_col, F.lit(run_by_user))
-                        .withColumn(updated_by_col, F.lit(run_by_user))
                         .select(*column_names))
 
         #Prepare rows that expire old current versions
@@ -175,7 +170,7 @@ for yaml_file in all_files:
             (delta_table.alias("t")
              .merge(merge_source.alias("s"), merge_condition)
              .whenMatchedUpdate(
-                 set={latest_col: "0", updated_col: "current_timestamp()", updated_by_col: F.lit(run_by_user)}
+                 set={latest_col: "0", updated_col: "current_timestamp()"}
              )
              .whenNotMatchedInsert(
                  condition="s.`_scd_action` = 'INSERT'",
@@ -186,7 +181,7 @@ for yaml_file in all_files:
             inserted_count, updated_count = get_delta_merge_counts(target_table)
         process_log("Success", table_name=table_name, layer="silver", total_inserted_count=inserted_count, total_updated_count=updated_count)
         print(f"Completed {target_table}: inserted={inserted_count}, updated={updated_count}")
-        send_mail_fn(f"{pipeline_name}-{task_name}-{table_name}- Silver layer is processed successfully", f"Inserted: {inserted_count}, Updated: {updated_count}")
+        # send_mail_fn(f"{pipeline_name}-{task_name}-{table_name}- Silver layer is processed successfully", f"Inserted: {inserted_count}, Updated: {updated_count}")
     except Exception as e:
         error_text = str(e)
         print(f"Failed {table_name}: {error_text}")
@@ -194,10 +189,10 @@ for yaml_file in all_files:
             process_log("Failed", table_name=table_name, layer="silver", total_inserted_count=inserted_count, total_updated_count=updated_count, error_message=error_text)
         except Exception as log_error:
             print(f"Could not write failure log: {log_error}")
-        try:
-            send_mail_fn(f"{pipeline_name}-{task_name}-{table_name}- Silver layer is failed", error_text)
-        except Exception as mail_error:
-            print(f"Could not send failure email: {mail_error}")
+        # try:
+        #     send_mail_fn(f"{pipeline_name}-{task_name}-{table_name}- Silver layer is failed", error_text)
+        # except Exception as mail_error:
+        #     print(f"Could not send failure email: {mail_error}")
         raise
 
 # METADATA ********************

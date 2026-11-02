@@ -190,12 +190,162 @@
             ]
           }
         ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "643aa115-9fac-a49c-4c19-c20e9352f5f6",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "pipeline_name": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "task_name": {
+              "value": "Loading-Bronze-Data-To-Silver-Layer",
+              "type": "string"
+            },
+            "yaml_path_silver": {
+              "value": {
+                "value": "@pipeline().parameters.yaml_path_silver",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_bronze_to_silver",
+        "dependsOn": [
+          {
+            "activity": "ForEachzipfile",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "1bb90bbc-127b-9e5b-4457-8656dcdf5ec0",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "pipeline_name": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "task_name": {
+              "value": "Load-Silver-Data-To-Gold-Layer",
+              "type": "string"
+            },
+            "yaml_path_gold": {
+              "value": {
+                "value": "@pipeline().parameters.yaml_path_gold",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_silver_to_gold",
+        "dependsOn": [
+          {
+            "activity": "nb_bronze_to_silver",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "5c704ce0-0557-a941-47a6-f5e94f5e0a23",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "pipeline_start_time": {
+              "value": {
+                "value": "@variables('v_pipeline_start_time')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "pipeline_name": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "log_table": {
+              "value": "control.etl_run_log",
+              "type": "string"
+            },
+            "pipeline_run_id": {
+              "value": {
+                "value": "@pipeline().RunId",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_send_email_notification",
+        "dependsOn": [
+          {
+            "activity": "nb_silver_to_gold",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          }
+        ]
       }
     ],
     "parameters": {
       "yaml_path_bronze": {
         "type": "string",
         "defaultValue": "/lakehouse/default/Files/config/yaml/bronze/"
+      },
+      "yaml_path_silver": {
+        "type": "string",
+        "defaultValue": "/lakehouse/default/Files/config/yaml/silver/"
+      },
+      "yaml_path_gold": {
+        "type": "string",
+        "defaultValue": "/lakehouse/default/Files/config/yaml/gold/"
+      }
+    },
+    "variables": {
+      "v_pipeline_start_time": {
+        "type": "String",
+        "defaultValue": "@utcNow()"
       }
     }
   }
